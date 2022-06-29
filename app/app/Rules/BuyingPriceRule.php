@@ -3,12 +3,11 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
-class SellingPriceRule implements Rule
+class BuyingPriceRule implements Rule
 {
-
-    protected $totalWagerValue;
-    protected $sellingPercentage;
+    protected $wagerId;
 
     /**
      * Create a new rule instance.
@@ -20,16 +19,9 @@ class SellingPriceRule implements Rule
         //
     }
 
-    public function totalWagerValue($totalWagerValue)
+    public function wagerId($wagerId)
     {
-        $this->totalWagerValue = $totalWagerValue;
-
-        return $this;
-    }
-
-    public function sellingPercentage($sellingPercentage)
-    {
-        $this->sellingPercentage = $sellingPercentage;
+        $this->wagerId = $wagerId;
 
         return $this;
     }
@@ -43,8 +35,8 @@ class SellingPriceRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $gtSellingPrice = $this->totalWagerValue * ($this->sellingPercentage / 100);
-        return ($value > $gtSellingPrice);
+        $wager = DB::table('wagers')->find($this->wagerId);
+        return ($value <= $wager->current_selling_price);
     }
 
     /**
@@ -54,6 +46,6 @@ class SellingPriceRule implements Rule
      */
     public function message()
     {
-        return 'The :attribute must be greater than total_wager_value * (selling_percentage / 100).';
+        return 'The :attribute must be lesser or equal to current_selling_price of the wager_id.';
     }
 }

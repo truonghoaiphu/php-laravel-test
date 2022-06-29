@@ -7,6 +7,7 @@ use App\Models\Wager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Purchase\BuyPurchasesRequest;
 
 class PurchaseController extends Controller
 {
@@ -86,7 +87,14 @@ class PurchaseController extends Controller
         //
     }
 
-    public function buy(Request $request, $wagerId)
+    /**
+     * @param BuyPurchasesRequest $request
+     * @param $wagerId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Exception
+     */
+
+    public function buy(BuyPurchasesRequest $request, $wagerId)
     {
         DB::beginTransaction();
         try {

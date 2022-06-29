@@ -61,32 +61,21 @@ class WagerController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      * @throws \Exception
      */
-    public function store(Request $request)
+    public function store(StoreWagersRequest $request)
     {
         DB::beginTransaction();
         try {
-            $request->validate(
-                [
-                    '*'                  => 'required',
-                    'total_wager_value'  => 'required|integer|gt:0',
-                    'odds'               => 'required|integer|gt:0',
-                    'selling_percentage' => 'required|integer|between:1,100',
-                    'selling_price'      => 'required|numeric',
-                ]
-            );
-
-            $input = $request->all();
-
-            $toalWagerValue      = $input['total_wager_value'];
-            $oods                = $input['odds'];
-            $sellingPercentage   = $input['selling_percentage'];
-            $sellingPrice        = $input['selling_price'];
-            $currentSellingPrice = 0;
-            $percentageSold      = 0;
-            $amountSold          = 0;
+            $totalWagerValue      = $request->input('total_wager_value');
+            $oods                = $request->input('odds');
+            $sellingPercentage   = $request->input('selling_percentage');
+            $sellingPrice        = $request->input('selling_price');
+            $currentSellingPrice = $request->input('current_selling_price', 0);
+            $percentageSold      = $request->input('percentage_sold', 0);
+            $amountSold          = $request->input('amount_sold', 0);
             $now                 = Carbon::now();
+
             $wager = Wager::create([
-                'total_wager_value'     => $toalWagerValue,
+                'total_wager_value'     => $totalWagerValue,
                 'odds'                  => $oods,
                 'selling_percentage'    => $sellingPercentage,
                 'selling_price'         => $sellingPrice,
