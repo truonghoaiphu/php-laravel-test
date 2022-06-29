@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4c417c02-b416-4027-945c-895ce8af90fd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/app/Http/Requests/Purchase/BuyPurchasesRequest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/app/Rules/BuyingPriceRule.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/start.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/Http/Controllers/PurchaseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/Http/Controllers/PurchaseController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/Http/Controllers/WagerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/Http/Controllers/WagerController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/Http/Requests/Wager/StoreWagersRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/Http/Requests/Wager/StoreWagersRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/Rules/SellingPriceRule.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/Rules/SellingPriceRule.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/app/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/Http/Requests/Purchase/BuyPurchasesRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/Http/Requests/Purchase/BuyPurchasesRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/Rules/BuyingPriceRule.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/postgres/docker-entrypoint-initdb.d/db.sh" beforeDir="false" afterPath="$PROJECT_DIR$/docker/postgres/docker-entrypoint-initdb.d/db.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +175,7 @@
       <option name="presentableId" value="Default" />
       <updated>1656429892815</updated>
       <workItem from="1656429895112" duration="300000" />
-      <workItem from="1656512149166" duration="4472000" />
+      <workItem from="1656512149166" duration="6425000" />
     </task>
     <servers />
   </component>
