@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase;
+use App\Models\Wager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseController extends Controller
 {
@@ -81,5 +84,43 @@ class PurchaseController extends Controller
     public function destroy(Purchase $purchase)
     {
         //
+    }
+
+    public function buy(Request $request, $wagerId)
+    {
+        DB::beginTransaction();
+        try {
+            $buyingPrice = $request->input('buying_price');
+            $purchase = Purchase::create([
+                'wager_id'     => $wagerId,
+                'buying_price' => $buyingPrice,
+                'bought_at'    => Carbon::now(),
+            ]);
+
+            $purchase->save();
+            DB::commit();
+
+            $countPurchase = DB::table('purchases')->where('wager_id', $wagerId)->count();
+
+            $oldWager = DB::table('wagers')->find($wagerId);
+            $wager = [
+                'current_selling_price' => $purchase->buying_price,
+                'percentage_sold'       => $purchase->buying_price / $oldWager->total_wager_value * 100,
+                'amount_sold'           => $countPurchase,
+            ];
+
+            Wager::whereId($wagerId)->update($wager);
+
+            return response([
+                'id'           => $purchase->id,
+                'wager_id'     => $purchase->wager_id,
+                'buying_price' => $purchase->buying_price,
+                'bought_at'    => $purchase->bought_at,
+            ]);
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 }

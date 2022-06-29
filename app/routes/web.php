@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WagerController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +20,5 @@ Route::get('/', function () {
 });
 
 Route::post('/wagers', [WagerController::class, 'store']);
+Route::get('/wagers', [WagerController::class, 'index']);
+Route::post('/buy/{wager_id}', [PurchaseController::class, 'buy']);

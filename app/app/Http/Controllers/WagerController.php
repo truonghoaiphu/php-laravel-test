@@ -7,17 +7,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\Wager\StoreWagersRequest;
+use App\Http\Requests\Wager\GetWagersRequest;
+use App\Traits\PaginateTrait;
 
 class WagerController extends Controller
 {
+    use PaginateTrait;
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param GetWagersRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function index()
+    public function index(GetWagersRequest $request)
     {
-        //
+        try {
+            $page  = $request->input('page', 1);
+            $limit = $request->input('limit', 10);
+            $selectColumn  = [
+                'id',
+                'total_wager_value',
+                'odds',
+                'selling_percentage',
+                'selling_price',
+                'current_selling_price',
+                'percentage_sold',
+                'amount_sold',
+                'placed_at',
+            ];
+            $wagers = DB::table('wagers')->orderBy('id', 'desc')->paginate($limit, $selectColumn, 'page', $page);
+
+            return response($this->handleResponseData($wagers));
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
     }
 
     /**
@@ -33,27 +57,39 @@ class WagerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreWagersRequest $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      * @throws \Exception
      */
-    public function store(StoreWagersRequest $request)
+    public function store(Request $request)
     {
         DB::beginTransaction();
         try {
-            $toalWagerValue      = $request->input('total_wager_value');
-            $oods                = $request->input('odds');
-            $sellingPercentage   = $request->input('selling_percentage');
-            $sellingPrice        = $request->input('selling_price');
-            $currentSellingPrice = $request->input('current_selling_price', 0);
-            $percentageSold      = $request->input('percentage_sold', 0);
-            $amountSold          = $request->input('amount_sold', 0);
+            $request->validate(
+                [
+                    '*'                  => 'required',
+                    'total_wager_value'  => 'required|integer|gt:0',
+                    'odds'               => 'required|integer|gt:0',
+                    'selling_percentage' => 'required|integer|between:1,100',
+                    'selling_price'      => 'required|numeric',
+                ]
+            );
+
+            $input = $request->all();
+
+            $toalWagerValue      = $input['total_wager_value'];
+            $oods                = $input['odds'];
+            $sellingPercentage   = $input['selling_percentage'];
+            $sellingPrice        = $input['selling_price'];
+            $currentSellingPrice = 0;
+            $percentageSold      = 0;
+            $amountSold          = 0;
             $now                 = Carbon::now();
             $wager = Wager::create([
                 'total_wager_value'     => $toalWagerValue,
                 'odds'                  => $oods,
                 'selling_percentage'    => $sellingPercentage,
-                'selling_price'         => $request->input('selling_price'),
+                'selling_price'         => $sellingPrice,
                 'current_selling_price' => $currentSellingPrice,
                 'percentage_sold'       => $percentageSold,
                 'amount_sold'           => $amountSold,
@@ -61,17 +97,9 @@ class WagerController extends Controller
                 'created_at'            => $now,
                 'updated_at'            => $now
             ]);
-//            if ($sellingPrice <= $toalWagerValue * $sellingPercentage / 100) {
-//                return response()->json([
-//                    'error' => "The selling price must be greater than ". $toalWagerValue * $sellingPercentage / 100.".",
-//                ]);
-//            } else {
-//                $wager = Wager::create([
-//                    'selling_price' => $sellingPrice,
-//                ]);
-//            }
             $wager->save();
             DB::commit();
+
 
             return response([
                 'id'                    => $wager->id,
