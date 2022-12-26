@@ -211,5 +211,3 @@ curl --location --request GET 'http://localhost:8080/wagers?page=1&limit=200'
     "count": 10
 }
 ```
-
-# I guess your challenge wrong. Because current_selling_price is 0, but buying_price must be lesser or equal to current_selling_price of the wager_id so buying_price always is 0. Please check it.
